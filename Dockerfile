@@ -16,4 +16,7 @@ RUN apk add --no-cache curl jq git build-base bash zip
 
 ADD entrypoint.sh /entrypoint.sh
 ADD build.sh /build.sh
+
+RUN chmod a+x entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
