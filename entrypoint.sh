@@ -7,7 +7,7 @@ if [ -z "${CMD_PATH+x}" ]; then
   export CMD_PATH=""
 fi
 
-FILE_LIST=`./build.sh`
+FILE_LIST=`/build.sh`
 
 EVENT_DATA=$(cat $GITHUB_EVENT_PATH)
 echo $EVENT_DATA | jq .
