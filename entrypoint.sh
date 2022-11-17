@@ -7,7 +7,7 @@ if [ -z "${CMD_PATH+x}" ]; then
   export CMD_PATH=""
 fi
 
-/build.sh
+FILE_LIST=`./build.sh`
 
 EVENT_DATA=$(cat $GITHUB_EVENT_PATH)
 echo $EVENT_DATA | jq .
@@ -17,10 +17,20 @@ RELEASE_NAME=$(echo $EVENT_DATA | jq -r .release.tag_name)
 PROJECT_NAME=$(basename $GITHUB_REPOSITORY)
 NAME="${PROJECT_NAME}_${RELEASE_NAME}_${GOOS}_${GOARCH}"
 
-EXT=''
+if [ -z "${EXTRA_FILES+x}" ]; then
+  echo "::warning file=entrypoint.sh,line=22,col=1::EXTRA_FILES not set"
+fi
+
+FILE_LIST="${FILE_LIST} ${EXTRA_FILES}"
+
+FILE_LIST=`echo "${FILE_LIST}" | awk '{$1=$1};1'`
 
 if [ $GOOS == 'windows' ]; then
-  EXT='.exe'
+  ARCHIVE=tmp.zip
+  zip -9r $ARCHIVE ${FILE_LIST}
+else
+  ARCHIVE=tmp.tgz
+  tar cvfz $ARCHIVE ${FILE_LIST}
 fi
 
 tar cvfz tmp.tgz "${PROJECT_NAME}${EXT}"
