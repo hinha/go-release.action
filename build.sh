@@ -2,6 +2,7 @@
 
 set -eux
 
+PROJECT_NAME=$(basename $GITHUB_REPOSITORY)
 PROJECT_ROOT="/go/src/github.com/${GITHUB_REPOSITORY}"
 
 mkdir -p $PROJECT_ROOT
